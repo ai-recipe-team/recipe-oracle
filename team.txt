@@ -1,0 +1,5 @@
+## 👩‍💻 Team
+- Gourika – Frontend
+- Sachita – YOLOv5
+- Lipi – Gemini LLM
+- Minakshi – NLP Filtering

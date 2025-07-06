@@ -1,0 +1,6 @@
+streamlit
+Pillow
+nltk
+torch
+python-dotenv
+google-generativeai
