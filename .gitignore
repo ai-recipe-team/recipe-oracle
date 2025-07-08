@@ -4,3 +4,4 @@ venv/
 uploads/
 *.pyc
 .DS_Store
+secret.env
