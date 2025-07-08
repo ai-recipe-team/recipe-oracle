@@ -2,24 +2,37 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Load the secrets.env file
 load_dotenv("secrets.env")
-
-# Configure Gemini with your API key
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Start the Gemini model (flash version)
-llm = genai.GenerativeModel('gemini-1.5-flash').start_chat()
+chat = genai.GenerativeModel("gemini-1.5-flash").start_chat()
 
 def generate_dish_options(ingredients):
-    ing = ", ".join(ingredients)
-    prompt = f"I have {ing}. Suggest 3 Indian dishes I can make (just names)."
-    res = llm.send_message(prompt)
-    titles = res.text.split("\n")
-    return [{"title": t.strip()} for t in titles if t.strip()]
+    ingredient_str = ", ".join(ingredients)
+    prompt = f"I have {ingredient_str}. Suggest some Indian dishes using some of these ingredients (just names, no recipes)."
+    
+    try:
+        response = chat.send_message(prompt)
+        dishes = response.text.strip().split("\n")
+        return [{"title": dish.strip("1234567890. ").strip()} for dish in dishes if dish.strip()]
+    except Exception as e:
+        print("❌ Gemini API error (dish generation):", e)
+        return [{"title": "⚠️ Unable to fetch dish options. Please try again shortly."}]
 
 def generate_recipe(dish_name):
-    prompt = f"Give me a recipe for {dish_name}"
-    res = llm.send_message(prompt)
-    steps = res.text.split("\n")
-    return {"title": dish_name, "steps": [s for s in steps if s.strip()]}
+    prompt = f"Give me a detailed recipe for {dish_name}"
+    
+    try:
+        response = chat.send_message(prompt)
+        steps = response.text.strip().split("\n")
+        return {
+            "title": dish_name,
+            "steps": [step.strip("1234567890. ").strip() for step in steps if step.strip()]
+        }
+    except Exception as e:
+        print("❌ Gemini API error (recipe generation):", e)
+        return {
+            "title": "Error",
+            "steps": ["⚠️ Unable to fetch recipe at the moment. Please wait and try again."]
+        }
+

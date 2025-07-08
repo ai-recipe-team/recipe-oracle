@@ -1,9 +1,23 @@
-import torch
+from ultralytics import YOLO
+
+# Load YOLOv8 model 
+model = YOLO("yolov8n.pt")
 
 def detect_objects(image_path):
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+    """
+    Uses YOLOv8 to detect objects in an image.
+    Returns a list of dictionaries with 'class' and 'confidence' keys.
+    """
     results = model(image_path)
-    labels = results.xyxyn[0][:, -1].cpu().numpy()
-    label_names = results.names
-    detected_items = [label_names[int(label)] for label in labels]
-    return [{"class": item, "confidence": 0.9} for item in detected_items]
+    detected_items = []
+
+    for box in results[0].boxes:
+        class_id = int(box.cls[0].item())
+        class_name = results[0].names[class_id]
+        confidence = float(box.conf[0].item())
+        detected_items.append({
+            "class": class_name,
+            "confidence": confidence
+        })
+
+    return detected_items
