@@ -2,14 +2,15 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Load the .env file
-load_dotenv()
+# Load the secrets.env file
+load_dotenv("secrets.env")
 
 # Configure Gemini with your API key
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Start the Gemini model (flash version)
 llm = genai.GenerativeModel('gemini-1.5-flash').start_chat()
+
 def generate_dish_options(ingredients):
     ing = ", ".join(ingredients)
     prompt = f"I have {ing}. Suggest 3 Indian dishes I can make (just names)."
