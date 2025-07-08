@@ -7,6 +7,9 @@ import os
 from dotenv import load_dotenv
 import base64
 
+#  Page setup
+st.set_page_config(page_title="The Recipe Oracle", layout="wide")
+
 #  Load Gemini API key from secrets.env
 load_dotenv("secrets.env")
 
@@ -31,8 +34,7 @@ def set_background(image_file):
 #  Apply background image
 set_background("background.png")
 
-#  Page setup
-st.set_page_config(page_title="The Recipe Oracle", layout="wide")
+
 
 #  Add custom Google font
 st.markdown('<link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">', unsafe_allow_html=True)
